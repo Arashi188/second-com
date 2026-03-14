@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - MyStore{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.products') }}">Products</a></li>
+                <li class="breadcrumb-item active">{{ category.name }}</li>
+            </ol>
+        </nav>
+        
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}
+            <p class="lead">{{ category.description }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    {% if products.items %}
+        {% for product in products.items %}
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card product-card h-100">
+                <img src="{{ url_for('static', filename='uploads/' + product.image) if product.image else 'https://via.placeholder.com/300x200' }}" 
+                     class="card-img-top" alt="{{ product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-truncate">{{ product.description[:100] }}...</p>
+                    <p class="card-text"><strong>₦{{ "%.2f"|format(product.price) }}</strong></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="btn btn-primary btn-sm">
+                            View Details
+                        </a>
+                        {% if product.is_in_stock() %}
+                            <span class="badge bg-success">In Stock</span>
+                        {% else %}
+                            <span class="badge bg-danger">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No products found in this category.
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if products.pages > 1 %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if products.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.category_products', category_id=category.id, page=products.prev_num) }}">Previous</a>
+        </li>
+        {% endif %}
+        
+        {% for page_num in products.iter_pages() %}
+            {% if page_num %}
+                <li class="page-item {% if page_num == products.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('main.category_products', category_id=category.id, page=page_num) }}">{{ page_num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.category_products', category_id=category.id, page=products.next_num) }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

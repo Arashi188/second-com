@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ - MyStore{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Frequently Asked Questions</h1>
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                        How do I place an order?
+                    </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        To place an order, simply browse our products, add items to your cart, and click "Checkout via WhatsApp". 
+                        This will open WhatsApp with a pre-filled message containing all your order details. Send the message and 
+                        our team will respond with payment instructions.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                        What payment methods do you accept?
+                    </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Payment instructions will be provided via WhatsApp after order confirmation. We typically accept bank transfers, 
+                        and mobile money. Specific payment options will be discussed with you during the WhatsApp conversation.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                        How long does delivery take?
+                    </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Delivery times vary depending on your location. Typically, orders are processed within 24 hours and delivery 
+                        takes 2-5 business days for local deliveries. International shipping times may vary. You'll receive tracking 
+                        information via WhatsApp.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                        Can I modify or cancel my order?
+                    </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, you can modify or cancel your order within 1 hour of placing it. Contact us immediately on WhatsApp 
+                        with your order number and requested changes. After that, orders may have already been processed.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                        What is your return policy?
+                    </button>
+                </h2>
+                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        We accept returns within 7 days of delivery for defective or damaged items. Please contact us on WhatsApp 
+                        with photos of the damage and your order number to initiate the return process.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                        How do I track my order?
+                    </button>
+                </h2>
+                <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Once your order is shipped, you'll receive a tracking number and link via WhatsApp. You can use this to 
+                        track your package's delivery status. You can also contact us for updates.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                        Do you ship internationally?
+                    </button>
+                </h2>
+                <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, we ship to select countries. International shipping rates and delivery times vary by location. 
+                        Contact us on WhatsApp for specific information about shipping to your country.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+                        Is my information secure?
+                    </button>
+                </h2>
+                <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, we take security seriously. All personal information is encrypted and protected. We never store 
+                        payment information. Orders are processed through WhatsApp's secure platform.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body text-center">
+                <h5>Still have questions?</h5>
+                <p>Contact us on WhatsApp for immediate assistance:</p>
+                <a href="https://wa.me/2347088028747" class="btn btn-success btn-lg" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Chat with Us
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - MyStore{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Contact Us</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="card-title">Get in Touch</h3>
+                <p class="card-text">We're here to help! Choose your preferred method of contact:</p>
+                
+                <div class="mt-4">
+                    <h5><i class="fab fa-whatsapp text-success"></i> WhatsApp</h5>
+                    <p class="mb-3">Quickest response time. Click the button below to start a conversation:</p>
+                    <a href="https://wa.me/2347088028747" class="btn btn-success btn-lg mb-4" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                    </a>
+                    
+                    <h5><i class="far fa-envelope text-primary"></i> Email</h5>
+                    <p><a href="mailto:support@mystore.com">support@mystore.com</a></p>
+                    
+                    <h5><i class="fas fa-phone text-info"></i> Phone</h5>
+                    <p>+234 708 802 8747</p>
+                    
+                    <h5><i class="fas fa-map-marker-alt text-danger"></i> Address</h5>
+                    <p>123 Business Avenue<br>Lagos, Nigeria</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h3 class="card-title">Business Hours</h3>
+                
+                <table class="table">
+                    <tr>
+                        <td>Monday - Friday:</td>
+                        <td>9:00 AM - 6:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Saturday:</td>
+                        <td>10:00 AM - 4:00 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Sunday:</td>
+                        <td>Closed</td>
+                    </tr>
+                </table>
+                
+                <h4 class="mt-4">Order Information</h4>
+                <p>All orders are processed through WhatsApp for personalized service. You'll receive:</p>
+                <ul>
+                    <li>Order confirmation within minutes</li>
+                    <li>Payment instructions via WhatsApp</li>
+                    <li>Shipping/delivery updates</li>
+                    <li>Customer support throughout the process</li>
+                </ul>
+                
+                <div class="alert alert-info mt-4">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> Orders placed outside business hours will be processed the next business day.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

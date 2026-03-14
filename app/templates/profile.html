@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Order Sent - MyStore{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card text-center">
+            <div class="card-body py-5">
+                <div class="mb-4">
+                    <i class="fas fa-check-circle fa-5x text-success"></i>
+                </div>
+                
+                <h2 class="mb-3">Order Sent Successfully!</h2>
+                
+                <p class="lead mb-4">
+                    Your order has been sent via WhatsApp. You will receive a confirmation shortly.
+                </p>
+                
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Order #{{ order_id }}</strong> has been recorded. Please save this number for reference.
+                </div>
+                
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <a href="https://wa.me/2347088028747" class="btn btn-success btn-lg" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Continue on WhatsApp
+                    </a>
+                    
+                    <a href="{{ url_for('main.products') }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Continue Shopping
+                    </a>
+                    
+                    <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5>What happens next?</h5>
+                <ol class="mb-0">
+                    <li>Our team will review your order on WhatsApp</li>
+                    <li>You'll receive payment instructions</li>
+                    <li>After payment confirmation, we'll process your order</li>
+                    <li>Shipping/delivery updates will be sent via WhatsApp</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

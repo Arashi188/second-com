@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - MyStore{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Search Results</h1>
+        {% if query %}
+            <p class="lead">Found {{ products.total }} result(s) for "{{ query }}"</p>
+        {% else %}
+            <p class="lead">All Products</p>
+        {% endif %}
+    </div>
+    <div class="col-md-4">
+        <form action="{{ url_for('main.search') }}" method="GET" class="d-flex">
+            <input type="text" name="q" class="form-control me-2" placeholder="Search products..." value="{{ query or '' }}">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="sort" class="form-label">Sort by:</label>
+                        <select class="form-select" id="sort" onchange="updateFilters()">
+                            <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest First</option>
+                            <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                            <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                            <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name: A to Z</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="min_price" class="form-label">Min Price (₦):</label>
+                        <input type="number" class="form-control" id="min_price" value="{{ min_price or '' }}" placeholder="Min">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="max_price" class="form-label">Max Price (₦):</label>
+                        <input type="number" class="form-control" id="max_price" value="{{ max_price or '' }}" placeholder="Max">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-primary w-100" onclick="applyFilters()">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="row" id="products-container">
+    {% if products.items %}
+        {% for product in products.items %}
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card product-card h-100">
+                <div class="position-relative">
+                    <img src="{{ url_for('static', filename='uploads/' + product.image) if product.image else 'https://via.placeholder.com/300x200' }}" 
+                         class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% if not product.is_in_stock() %}
+                        <span class="position-absolute top-0 start-0 badge bg-danger m-2">Out of Stock</span>
+                    {% endif %}
+                    <button class="btn position-absolute top-0 end-0 m-2 wishlist-btn" 
+                            onclick="toggleWishlist({{ product.id }})"
+                            style="background: white; border-radius: 50%; width: 35px; height: 35px;">
+                        <i class="{% if product.id in wishlist_ids %}fas{% else %}far{% endif %} fa-heart text-danger"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text text-truncate">{{ product.description[:100] }}...</p>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="h5 mb-0">₦{{ "%.2f"|format(product.price) }}</span>
+                        {% if product.stock < 10 and product.stock > 0 %}
+                            <small class="text-warning">Only {{ product.stock }} left!</small>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                        {% if product.is_in_stock() %}
+                        <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="POST" class="d-inline">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </form>
+                        {% else %}
+                        <button class="btn btn-secondary btn-sm w-100" disabled>
+                            <i class="fas fa-times"></i> Out of Stock
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                <h3>No products found</h3>
+                {% if query %}
+                    <p class="text-muted">We couldn't find any products matching "{{ query }}".</p>
+                    <p>Try different keywords or browse our categories:</p>
+                {% else %}
+                    <p class="text-muted">No products available at the moment.</p>
+                {% endif %}
+                <div class="mt-3">
+                    <a href="{{ url_for('main.products') }}" class="btn btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Browse All Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if products.pages > 1 %}
+<nav aria-label="Search results pages" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if products.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.search', q=query, page=products.prev_num, sort=sort_by, min_price=min_price, max_price=max_price) }}">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link"><i class="fas fa-chevron-left"></i> Previous</span>
+        </li>
+        {% endif %}
+
+        {% for page_num in products.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == products.page %}
+                <li class="page-item active">
+                    <span class="page-link">{{ page_num }}</span>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('main.search', q=query, page=page_num, sort=sort_by, min_price=min_price, max_price=max_price) }}">{{ page_num }}</a>
+                </li>
+                {% endif %}
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('main.search', q=query, page=products.next_num, sort=sort_by, min_price=min_price, max_price=max_price) }}">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">Next <i class="fas fa-chevron-right"></i></span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Search Suggestions -->
+{% if query and products.items %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5>Did you mean?</h5>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for suggestion in suggestions %}
+                        <a href="{{ url_for('main.search', q=suggestion) }}" class="badge bg-secondary text-decoration-none p-2">
+                            {{ suggestion }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Toggle wishlist
+function toggleWishlist(productId) {
+    fetch(`/wishlist/toggle/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const icon = event.currentTarget.querySelector('i');
+            if (data.action === 'added') {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                showNotification('Added to wishlist!', 'success');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                showNotification('Removed from wishlist', 'info');
+            }
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Apply filters
+function applyFilters() {
+    const minPrice = document.getElementById('min_price').value;
+    const maxPrice = document.getElementById('max_price').value;
+    const sort = document.getElementById('sort').value;
+    const query = "{{ query or '' }}";
+    
+    let url = `{{ url_for('main.search') }}?q=${encodeURIComponent(query)}&sort=${sort}`;
+    if (minPrice) url += `&min_price=${minPrice}`;
+    if (maxPrice) url += `&max_price=${maxPrice}`;
+    
+    window.location.href = url;
+}
+
+// Update filters (for sort select)
+function updateFilters() {
+    applyFilters();
+}
+
+// Show notification
+function showNotification(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+    alertDiv.style.zIndex = '9999';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
+
+// Live search suggestions (optional)
+let searchTimeout;
+const searchInput = document.querySelector('input[name="q"]');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value;
+        
+        if (query.length >= 2) {
+            searchTimeout = setTimeout(() => {
+                fetch(`/api/search-suggestions?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display suggestions dropdown
+                        showSuggestions(data.suggestions);
+                    });
+            }, 300);
+        }
+    });
+}
+
+function showSuggestions(suggestions) {
+    // Implementation for suggestions dropdown
+    console.log('Suggestions:', suggestions);
+}
+</script>
+{% endblock %}

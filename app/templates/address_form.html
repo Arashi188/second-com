@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - MyStore{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{{ title }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="full_name" class="form-label">Full Name</label>
+                            {{ form.full_name(class="form-control") }}
+                            {% if form.full_name.errors %}
+                                {% for error in form.full_name.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            {{ form.phone(class="form-control") }}
+                            {% if form.phone.errors %}
+                                {% for error in form.phone.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address_line1" class="form-label">Address Line 1</label>
+                        {{ form.address_line1(class="form-control") }}
+                        {% if form.address_line1.errors %}
+                            {% for error in form.address_line1.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address_line2" class="form-label">Address Line 2 (Optional)</label>
+                        {{ form.address_line2(class="form-control") }}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            {{ form.city(class="form-control") }}
+                            {% if form.city.errors %}
+                                {% for error in form.city.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="state" class="form-label">State</label>
+                            {{ form.state(class="form-control") }}
+                            {% if form.state.errors %}
+                                {% for error in form.state.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="postal_code" class="form-label">Postal Code</label>
+                            {{ form.postal_code(class="form-control") }}
+                            {% if form.postal_code.errors %}
+                                {% for error in form.postal_code.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="country" class="form-label">Country</label>
+                        {{ form.country(class="form-control") }}
+                        {% if form.country.errors %}
+                            {% for error in form.country.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="label" class="form-label">Address Label</label>
+                        {{ form.label(class="form-control", placeholder="e.g., Home, Office") }}
+                        {% if form.label.errors %}
+                            {% for error in form.label.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        {{ form.is_default(class="form-check-input") }}
+                        <label class="form-check-label" for="is_default">
+                            Set as default address
+                        </label>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('main.profile') }}" class="btn btn-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Address
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - MyStore{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <img src="{{ url_for('static', filename='uploads/' + product.image) if product.image else 'https://via.placeholder.com/600x400' }}" 
+             class="img-fluid rounded" alt="{{ product.name }}">
+    </div>
+    <div class="col-md-6">
+        <h1>{{ product.name }}</h1>
+        <p class="text-muted">Product ID: #{{ product.id }}</p>
+        
+        <h2 class="text-primary mb-3">₦{{ "%.2f"|format(product.price) }}</h2>
+        
+        <div class="mb-3">
+            {% if product.is_in_stock() %}
+                <span class="badge bg-success p-2">In Stock ({{ product.stock }} available)</span>
+            {% else %}
+                <span class="badge bg-danger p-2">Out of Stock</span>
+            {% endif %}
+        </div>
+        
+        <div class="mb-4">
+            <h4>Description</h4>
+            <p>{{ product.description }}</p>
+        </div>
+        
+        {% if product.is_in_stock() %}
+        <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="POST" class="mb-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="quantity" class="col-form-label">Quantity:</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="{{ product.stock }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+        
+        <div class="mt-4">
+            <h5>Quick Order via WhatsApp</h5>
+            <a href="https://wa.me/2347088028747?text=I'm%20interested%20in%20{{ product.name|urlencode }}%20(ID:%20{{ product.id }})" 
+               class="btn btn-success" target="_blank">
+                <i class="fab fa-whatsapp"></i> Order on WhatsApp
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

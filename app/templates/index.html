@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Home - MyStore{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Carousel -->
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="{{ url_for('static', filename='images/slide1.jpg') }}" class="d-block w-100" alt="Slide 1">
+            <div class="carousel-caption d-none d-md-block">
+                <h3>Welcome to MyStore</h3>
+                <p>Your premier shopping destination</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{{ url_for('static', filename='images/slide2.jpg') }}" class="d-block w-100" alt="Slide 2">
+            <div class="carousel-caption d-none d-md-block">
+                <h3>Quality Products</h3>
+                <p>We offer the best quality at affordable prices</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{{ url_for('static', filename='images/slide3.jpg') }}" class="d-block w-100" alt="Slide 3">
+            <div class="carousel-caption d-none d-md-block">
+                <h3>Easy WhatsApp Orders</h3>
+                <p>Order directly through WhatsApp</p>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- Featured Products Section -->
+<section class="featured-products mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Featured Products</h2>
+        <a href="{{ url_for('main.products') }}" class="btn btn-outline-primary">
+            View All <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+    
+    <div class="row">
+        {% if featured_products %}
+            {% for product in featured_products %}
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card product-card h-100">
+                    <img src="{{ url_for('static', filename='uploads/' + product.image) if product.image else 'https://via.placeholder.com/300x200' }}" 
+                         class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-muted small">{{ product.description[:60] }}...</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="h5 mb-0 text-primary">₦{{ "%.2f"|format(product.price) }}</span>
+                            {% if product.is_in_stock() %}
+                                <span class="badge bg-success">In Stock</span>
+                            {% else %}
+                                <span class="badge bg-danger">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                            
+                            {% if product.is_in_stock() %}
+                            <form action="{{ url_for('main.add_to_cart', product_id=product.id) }}" method="POST">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No featured products available at the moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section bg-light py-5 rounded">
+    <div class="container">
+        <h2 class="text-center mb-4">Contact Us</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Get in Touch</h4>
+                <p>Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="fab fa-whatsapp text-success me-2"></i> WhatsApp: +2347088028747</li>
+                    <li class="mb-2"><i class="far fa-envelope text-primary me-2"></i> Email: support@mystore.com</li>
+                    <li class="mb-2"><i class="fas fa-phone text-info me-2"></i> Phone: +234 123 456 7890</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5>Quick Order via WhatsApp</h5>
+                        <p>Click the button below to start your order on WhatsApp:</p>
+                        <a href="https://wa.me/2347088028747?text=Hello%2C%20I'm%20interested%20in%20your%20products" 
+                           class="btn btn-success btn-lg w-100" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Order on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
