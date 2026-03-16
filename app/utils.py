@@ -21,7 +21,7 @@ def save_image(file):
         str: URL or filename of saved image
     """
     # Configure Cloudinary if credentials exist
-    if current_app.config.get('CLOUDINARY_CLOUD_NAME'):
+    if current_app.config.get('dapuaw0u6'):
         cloudinary.config(
             cloud_name=current_app.config['dapuaw0u6'],
             api_key=current_app.config['738952696443951'],

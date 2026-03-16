@@ -94,6 +94,12 @@ class Product(db.Model):
     
     def __repr__(self):
         return f'<Product {self.name}>'
+    
+    @property
+def image_url(self):
+    """Return image URL using utils function"""
+    from app.utils import get_image_url
+    return get_image_url(self.image)
 
 
 # ========== ORDER MODEL ==========
